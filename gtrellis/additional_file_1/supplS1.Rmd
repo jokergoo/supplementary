@@ -1,0 +1,112 @@
+Supplmentary S1. Visualize multiple transcripts for TP53, TP63 and TP73
+==============================================================
+
+**Author**: Zuguang Gu ( z.gu@dkfz.de )
+
+**Date**: `r Sys.Date()`
+
+----------------------------------------
+
+```{r, echo = FALSE, message = FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(gtrellis)))
+```
+
+<style type="text/css">
+h1 {
+	line-height: 120%;
+}
+</style>
+
+
+In **gtrellis**, genomic categories are not restricted in chromosomes. It can be any kind,
+such as genes, as long as the background ranges are specified.
+
+In following example, we put three genes in one row and draw their transcripts afterwards.
+
+In **gtrellis** package, `tp_family.RData` contains transcripts models for TP53, TP63 and TP73. 
+First we calculate the ranges for the three genes.
+
+```{r}
+library(gtrellis)
+load(system.file("extdata", "tp_family.RData", package = "circlize"))
+df = data.frame(gene = names(tp_family),
+    start = sapply(tp_family, function(x) min(unlist(x))),
+    end = sapply(tp_family, function(x) max(unlist(x))))
+df
+```
+
+Since multiple transcripts are plotted stack by stack, the maximum number of transcripts for the three genes 
+are calculated and it will be set as the maximum value on y-axis.
+
+```{r}
+# maximum number of transcripts
+n = max(sapply(tp_family, length))
+n
+```
+
+`df` contains ranges for the three genes and it can be passed to `gtrellis_layout()` for initializing the Trellis layout.
+Since Trellis layout will be changed in later part of this document, the code for adding graphics are wrapped into a function
+for repeatitive use.
+
+```{r, fig.width = 10, fig.height = 5}
+gtrellis_layout(data = df, n_track = 1, track_ylim = c(0.5, n+0.5), 
+    track_axis = FALSE, add_name_track = TRUE, xpadding = c(0.05, 0.05), 
+    ypadding = c(0.05, 0.05))
+plot_transcripts_model = function(tp_family) {
+	add_track(panel_fun = function() {
+	    gn = get_cell_meta_data("name")
+	    tr = tp_family[[gn]] # all transcripts for this gene
+	    for(i in seq_along(tr)) {
+	        # for each transcript
+	        current_tr_start = min(tr[[i]]$start)
+	        current_tr_end = max(tr[[i]]$end)
+	        grid.lines(c(current_tr_start, current_tr_end), c(n - i + 1, n - i + 1), 
+	            default.units = "native", gp = gpar(col = "#CCCCCC"))
+	        grid.rect(tr[[i]][[1]], n - i + 1, tr[[i]][[2]] - tr[[i]][[1]], 0.8,
+	            default.units = "native", just = "left", 
+	            gp = gpar(fill = "orange", col = "orange"))
+	    }
+	})
+}
+plot_transcripts_model(tp_family)
+```
+
+Next we change the layout into one-column layout. Now the coordinate for all three genes are changed
+to the relative positions to TSS because all three genes are aligned by their TSS on the plot. In following
+example, these 'magic numbers' are positions of the TSS of corresponding genes.
+
+```{r}
+# TP53 is on reverse strand
+tp_family$TP53 = lapply(tp_family$TP53, function(df) {
+        data.frame(start = 7590856 - df[[2]],
+                   end = 7590856 - df[[1]])
+    })
+tp_family$TP63 = lapply(tp_family$TP63, function(df) {
+        data.frame(start = df[[1]] - 189349205,
+                   end = df[[2]] - 189349205)
+    })
+tp_family$TP73 = lapply(tp_family$TP73, function(df) {
+        data.frame(start = df[[1]] - 3569084,
+                   end = df[[2]] - 3569084)
+    })
+df = data.frame(gene = names(tp_family),
+    start = sapply(tp_family, function(x) min(unlist(x))),
+    end = sapply(tp_family, function(x) max(unlist(x))))
+df
+```
+
+Since only the layout is changed here, `plot_transcripts_model()` can be directly applied here.
+
+```{r, fig.width = 8, fig.height = 8}
+n = max(sapply(tp_family, length))
+gtrellis_layout(data = df, n_track = 1, ncol = 1, track_ylim = c(0.5, n+0.5), 
+    track_axis = FALSE, add_name_track = TRUE, 
+    xpadding = c(0.01, 0.01), ypadding = c(0.05, 0.05))
+plot_transcripts_model(tp_family)
+```
+
+## Session info
+
+```{r}
+sessionInfo()
+```

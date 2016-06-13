@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Supplementary S3. The averaging model</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Supplementary S3. The averaging model</h1>
+
+<p><strong>Author</strong>: Zuguang Gu ( <a href="mailto:z.gu@dkfz.de">z.gu@dkfz.de</a> )</p>
+
+<p><strong>Date</strong>: 2016-02-27</p>
+
+<hr/>
+
+<p>When using points or rectangles under &ldquo;normal&rdquo; mode, or using pixels under &ldquo;pixel&rdquo; mode, each point/rectangle/pixel
+is mapped to a small window in the genome. When overlapping certain genomic regions to the curve, 
+and when the window is not completely covered by input regions, proper averaging method should 
+be applied to summarize the value in the window. </p>
+
+<p>Depending on different scenarios, <strong>HilbertCurve</strong> provides three metrics for averaging. </p>
+
+<p>The overlapping model is illustrated in the following plot. The red line in the bottom represents the 
+small window on the Hilbert curve. Black lines on the top are the parts of input regions that overlap
+with the window. The thick lines indicate the intersected part between the input regions and the window.</p>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAADYCAIAAACIkWaqAAAACXBIWXMAAAsSAAALEgHS3X78AAAPf0lEQVR4nO3dX0yV9x3H8e+p1ALOIZwiBwzRMSuLWpSkiWZL1kZn4hB11tYrI1r/XEzTqxoyME11SxPHFv80zW5MN8NiWK0T06QX7ZxN05SZtGpVLmwy1jkVISIU5QAe4NkF5AjH8+NPfdrnc07er+yCHZ7D8y0l7x5/Xz2GPM8zPdFoNDs7O+gpAGAKZMMV0gw9AMAvTwQ9QHI9PT1BjwAAUyMbLtHQf/XVV0GPAABTIxsu0dADAPxC6AEgzYkuY2WX1wDgIhsu0dADAPwienQju7wGABfZcImGXnZ5DQAusuESDT0AwC+EHgDSnOgyVnZ5DQAusuESDT0AwC+iRzeyy2sAcJENl2joZZfXAOAiGy7R0AMA/ELoASDNiS5jZZfXAOAiGy7R0AMA/CJ6dCO7vAYAF9lwiYZednkNAC6y4RINPQDAL4QeANKc6DJWdnkNAC6y4RINPQDAL6JHN7LLawBwkQ2XaOhll9cA4CIbLtHQAwD8QugBIM2JLmNll9cA4CIbLtHQAwD8Inp0I7u8BgAX2XCJhl52eQ0ALrLhEg09AMAvhB4A0pzoMlZ2eQ0ALrLhEg09AMAvokc3sstrAHCRDZdo6GWX1wDgIhsu0dADAPxC6AEgzYkuY2WX1wDgIhsu0dADAPwienQju7wGABfZcImGXnZ5DQAusuESDT0AwC+EHgDSnOgyVnZ5DQAusuESDT0AwC+iRzeyy2sAcJENl2joZZfXAOAiGy7R0AMA/ELoASDNiS5jZZfXAOAiGy7R0AMA/CJ6dCO7vAYAF9lwiYZednkNAC6y4RINPQDAL4QeANKc6DJWdnkNAC6y4RINPQDAL6JHN7LLawBwkQ2XaOhll9cA4CIbLtHQAwD8QugBIM2JLmNll9cA4CIbLtHQA34Jhb6rH/Lv7isD/hI9upFdXiPlVFdXp9xXRoqSDZfoS5KLFy+Wl5cHPQUATIFsuERf0SMt3b9/f+fOnZFIpLS09Pjx46FQyMxu3LhRUVERDofLy8sbGhriF4dCoYaGhiVLloTD4cOHD5tZV1fX1q1bCwsLi4qKtm3b1tXVFb+ypqamsLDwwIEDb7zxxoIFC3Jyct588834Z83s7t27mzZtys/PLy0tPXXqVMJgoVCovr4+EokkHSbp2PGvPM5UCfOb2TvvvFNYWPj0008fPXrU/+8v4OJJunDhQtAjwH979ux55ZVXenp6ent7d+3aNfzjt3bt2tOnTz948KClpWXp0qVXrlwZvtjMDh48ODQ0dPbs2aysLM/zduzYsX379mg0Go1Gd+zYsWvXrviVJ06cuHz5spkdOnSov7//ww8/zMzMjH92+Ll79+6NxWKffPJJbm5uX1/f6MHMbPfu3VevXk06TNKxR39l11QJ83ueN2vWrGvXrrW0tKxateo7/EYjILLhEg19T09P0CPAf8XFxW1tbcMf3759eziUeXl5o1951NfXD19gZt3d3fGPPc+bM2fO6KcXFxfHP9vf3z80NGRmsVjM87zhjxOee+fOneFHOjo6BgYGRg9mZu3t7a5hko49makS5vc8b/369evXrz958uTwnEgzsuESPbrR/C1KeEyDg4Pxc49p06YNf5CTk3P9+vXhH8cbN268+OKL8etnzpyZ8BVGH5sMDg7GH58+ffrwpzIyMkZfNvrWTzwx8tPe2tra39+fcEF+fr5rmKRjT2aqR+c/ffr07t27z5w5U1FR8ejXQaqTDZdo6GWX13gca9asqamp6e3t7evre/3114cfrKysPHLkSCwWa2pqWrRo0b1791xPX716dW1tbV9fX29vb21t7ZRauWLFirq6usHBwaampuXLlw8MDCS9LOkwScf+dlM988wzJSUl+/fv//zzzyc/PFKFbriC+8XEeGSPuvA4urq6tmzZEg6HFy5cWF9fn5OT43leZ2fnyy+/nJeXN3/+/MbGxvjFo384hz/u7OysqqqKRCKRSKSqqqqzszPhykefEv+gra1t3bp1eXl5JSUl7733XsJg8YuTDpN07MlPNfrjt99+Ozc3t6Cg4NixY9/qWwhpsuHit1fi+/P++++XlZXNnTvXzK5du7Z27VrZN4EaLUXHxvdPNlyiRzdIS5999tmePXva29tv3rxZXV390ksvBT3RpKTo2ECcaOhLS0uDHgH+27dvX25u7oIFC5577rmCgoKampqgJ5qUFB0b3z/ZcIke3QAA/CL6il53eQ0ADrLhEg09yy4AKUc2XKKhBwD4hdADQJpTXMZ6nvf1118LDjZt2rSioqInn3wy6EHGiMVit27dGv0n7zG+oqKizMzMoKdIDd98801H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" alt="plot of chunk unnamed-chunk-1"/></p>
+
+<p>For a given window on the curve, \(n\) is the number of input regions which overlap with the window (it is 3 in the above plot), 
+\(w_i\) is the width of the intersected segments (black thick lines), and \(x_i\) is the value associated with the original regions. </p>
+
+<p>The &ldquo;absolute&rdquo; method is denoted as \(v_a\) and is simply calculated as the mean of all input regions regardless of their width:</p>
+
+<p>\[ v_a = \frac{\sum_i^n{x_i}}{n} \]</p>
+
+<p>The &ldquo;weighted&rdquo; method is denoted as \(v_w\) and is calculated as the mean of all input regions weighted by the width of their intersections: </p>
+
+<p>\[ v_w = \frac{\sum_i^n{x_iw_i}}{\sum_i^n{w_i}} \]</p>
+
+<p>&ldquo;Absolute&rdquo; and &ldquo;weighted&rdquo; mode should be applied when background values should not be taken into consideration. For example, when summarizing
+the mean methylation in a small window, non-CpG background should be ignored, because methylation is only associated with CpG sites and not with other positions.</p>
+
+<p>The &ldquo;w0&rdquo; mode is the weighted mean between the intersected parts and un-intersected parts: </p>
+
+<p>\[ v_{w0} = \frac{v_wW + v_bW'}{W+W'} \]</p>
+
+<p>\(W\) is sum of width of the intersected parts (\(\sum_i^n{w_i}\)) and \(W'\) is the sum of width for the non-intersected parts. \(V_b\) is the value corresponding to the background. When e.g. averaging colors which are represented as numeric RGB values, the background value is set to 255 which corresponds to white.</p>
+
+</body>
+
+</html>

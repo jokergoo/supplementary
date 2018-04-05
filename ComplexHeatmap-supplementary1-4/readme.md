@@ -1,5 +1,5 @@
 
-Supplementaries for Zuguang Gu, Roland Eils and Matthias Schlesner, Complex heatmaps reveal patterns and correlations in multidimensional genomic data, Bioinformatics, 2016
+Supplementaries for Zuguang Gu, et al., Complex heatmaps reveal patterns and correlations in multidimensional genomic data, Bioinformatics, 2016
 
 - [Supplementary S1. Making Enhanced OncoPrint](http://jokergoo.github.com/supplementary/ComplexHeatmap-supplementary1-4/supplS1_TCGA_OncoPrint/supplS1_OncoPrint.html)
 - [Supplementary S2. Visualize Cell Heterogeneity from Single Cell RNASeq](http://jokergoo.github.com/supplementary/ComplexHeatmap-supplementary1-4/supplS2_scRNASeq/supplS2_scRNAseq.html)
